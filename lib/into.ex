@@ -1,18 +1,29 @@
 defmodule Into do
   @moduledoc """
-  Documentation for Into.
+  Collect the result of a pipe expression **into** a variable with `~>`
+
+      import Into, only: [~>: 2]
+
+  See the docs for `Into.~>/2`
   """
 
   @doc """
-  Hello world.
+  Assigns the result of the preceding expression to the following variable.
 
   ## Examples
 
-      iex> Into.hello
-      :world
+      import Into, only: [~>: 2]
+
+      [1, 2, 3]
+      |> Enum.reduce(&+/2)
+      ~> sum
+
+      sum == 6
 
   """
-  def hello do
-    :world
+  defmacro expression ~> variable do
+    quote do
+      var!(unquote(variable)) = unquote(expression)
+    end
   end
 end
